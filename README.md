@@ -1,2 +1,2 @@
-# aws-react-portfolio
+# Eric's React Learning Project
 AWS React Learning Portfolio
