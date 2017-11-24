@@ -1,2 +1,2 @@
 # Eric's React Learning Project
-AWS React Learning Portfolio
+AWS React Learning Portfolio from ACloud Guru
