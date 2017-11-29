@@ -29,10 +29,16 @@
    </head>
    <body>
       <main id="content"></main>
+      <div id="mocha"></div>
+
+      <link rel="stylesheet" href="https://unpkg.com/mocha@4.0.1/mocha.css">
 
       <script src="https://unpkg.com/babel-standalone"></script>
       <script type="text/javascript" src="https://unpkg.com/react@15.3.1/dist/react.min.js"></script>
       <script type="text/javascript" src="https://unpkg.com/react-dom@15.3.1/dist/react-dom.min.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/chai@4.1.2/chai.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/mocha@4.0.1/mocha.js"></script>
+
       <script type="text/babel" data-presets="react">
          class NameInput extends React.Component {
             constructor(props) {
@@ -61,7 +67,7 @@
                return (
                   <div>
                     <label>Name: <input ref="nameInput" type="text" /></label>
-                    <button onClick={this.buttonClicked}>Click Me!</button>
+                    <button id="inputButton" onClick={this.buttonClicked}>Click Me!</button>
                     <MessageBox type={msg.type} message={msg.body}/>
                   </div>
                )
@@ -69,16 +75,50 @@
          }
 
          class MessageBox extends React.Component {
-         render() { 
-         return (
-         <div className={"messageBox " + (this.props.type || "hidden")}>
-         {this.props.message}
-         </div>
-         )
-         }
+            render() { 
+               return (
+                  <div className={"messageBox " + (this.props.type || "hidden")}>
+                  {this.props.message}
+                  </div>
+               )
+            }
          }
 
          ReactDOM.render(<NameInput />, document.getElementById('content'));
+      </script>
+
+      <script type="text/babel" data-presets="react">
+         const assert = chai.assert;
+         mocha.ui("bdd");
+         mocha.reporter("html");
+         
+         describe("Example Tests", () => {
+           it("Proved that math works", () => {
+              assert.equal(5, 3+2, "Math works");   
+           });
+         });
+
+         describe("Document Tests", () => {
+            it("Found our component", () => {
+               assert.isDefined(MessageBox, "Our MessageBox component is defined.");
+            });
+
+            it("Rendered an empty MessageBox", () => {
+               let msgBox = document.querySelector(".messageBox");
+               assert.isDefined(msgBox, "Messagebox is in the document");
+               assert.include(msgBox.classList.value, "hidden", "MessageBox is hidden");
+               assert.equal(msgBox.innerText, "", "MessageBox is empty");
+            });
+
+            it("Rendered an error when the name is empty", () => {
+               let msgBox = document.querySelector(".messageBox");
+               let button = document.querySelector("#inputButton");
+               button.click();
+               assert.include(msgBox.classList.value, "error", "MessageBox type is error");
+            });
+         });
+
+         mocha.run();
       </script>
    </body>
 </html>
